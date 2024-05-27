@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.GreatLearning.RestApi.Entity.Employees;
+import com.GreatLearning.RestApi.Entity.User;
 import com.GreatLearning.RestApi.Service.EmployeeService;
+import com.GreatLearning.RestApi.Service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +25,16 @@ public class RestControl {
 
 	@Autowired
 	EmployeeService emp;
+	
+	@Autowired
+	UserService user;
+	
+	@PostMapping("addUser")
+	@ApiOperation("Add a new user with roles")
+	public User addUser(@RequestBody User newUser)
+	{
+		return user.addUser(newUser);
+	}
 
 	@PostMapping("/addEmployees")
 	@ApiOperation("Add a new Employee")
