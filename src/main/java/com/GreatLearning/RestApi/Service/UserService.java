@@ -13,8 +13,6 @@ public class UserService {
 	UserRepository userRepo;
 
 	public User addUser(User newUser) {
-		newUser.setAccountExpiryDate();
-		newUser.setCredentialsExpiryDate();
 		return userRepo.saveAndFlush(newUser);
 	}
 

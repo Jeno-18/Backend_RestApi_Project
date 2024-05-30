@@ -13,104 +13,124 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 public class User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
-	@Column(name="USERNAME", columnDefinition = "VARCHAR(50)")
-	String username;
-	@Column(name="PASSWORD", columnDefinition = "VARCHAR(50)")
-	String password;
 
-	@Column(name="ACCOUNTEXPIRYDATE", nullable = false)
-	LocalDate accountExpiryDate;
-	@Column(name="ACCOUNTLOCKEDSTATUS", columnDefinition = "INT")
-	int accountLockedStatus;
-	@Column(name="CREDENTIALSEXPIRYDATE", nullable = false)
-	LocalDate credentialsExpiryDate;
-	@Column(name="ACCOUNTENABLEDSTATUS", columnDefinition = "INT")
-	int accountEnabledStatus;
-	
-	public User(String username, String password) {					
-		this.username = username;
-		this.password = password;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    @Column(name = "USERNAME", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String username;
+    
+    @Column(name = "PASSWORD", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String password;
+    
+    @Column(name = "ACCOUNTEXPIRYDATE", nullable = false)
+    private LocalDate accountExpiryDate;
+    
+    @Column(name = "ACCOUNTLOCKEDSTATUS", columnDefinition = "INT", nullable = false)
+    private int accountLockedStatus;
+    
+    @Column(name = "CREDENTIALSEXPIRYDATE", nullable = false)
+    private LocalDate credentialsExpiryDate;
+    
+    @Column(name = "ACCOUNTENABLEDSTATUS", columnDefinition = "INT", nullable = false)
+    private int accountEnabledStatus;
 
-	public User() {}
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_ROLES", 
+               joinColumns = @JoinColumn(name = "USER_ID"), 
+               inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    private List<Roles> roles;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-	List<Roles> roles;
+    public User() {
+        // Default constructor
+    }
 
-	public int getId() {
-		return id;
-	}
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @PrePersist
+    protected void onCreate() {
+        this.accountExpiryDate = LocalDate.now().plusYears(1);
+        this.accountLockedStatus = 1;
+        this.credentialsExpiryDate = LocalDate.now().plusYears(1);
+        this.accountEnabledStatus = 1;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    // Getters and Setters
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public LocalDate getAccountExpiryDate() {
-		return accountExpiryDate;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setAccountExpiryDate() {
-		this.accountExpiryDate = LocalDate.now().plusYears(1);
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public int getAccountLockedStatus() {
-		return accountLockedStatus;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setAccountLockedStatus(int accountLockedStatus) {
-		this.accountLockedStatus = 1;
-	}
+    public LocalDate getAccountExpiryDate() {
+        return accountExpiryDate;
+    }
 
-	public LocalDate getCredentialsExpiryDate() {
-		return credentialsExpiryDate;
-	}
+    public void setAccountExpiryDate(LocalDate accountExpiryDate) {
+        this.accountExpiryDate = accountExpiryDate;
+    }
 
-	public void setCredentialsExpiryDate() {
-	    this.credentialsExpiryDate = LocalDate.now().plusYears(1);
-	}
+    public int getAccountLockedStatus() {
+        return accountLockedStatus;
+    }
 
-	public int getAccountEnabledStatus() {
-		return accountEnabledStatus;
-	}
+    public void setAccountLockedStatus(int accountLockedStatus) {
+        this.accountLockedStatus = accountLockedStatus;
+    }
 
-	public void setAccountEnabledStatus(int accountEnabledStatus) {
-		this.accountEnabledStatus = 1;
-	}
+    public LocalDate getCredentialsExpiryDate() {
+        return credentialsExpiryDate;
+    }
 
-	public List<Roles> getRoles() {
-		return roles;
-	}
+    public void setCredentialsExpiryDate(LocalDate credentialsExpiryDate) {
+        this.credentialsExpiryDate = credentialsExpiryDate;
+    }
 
-	public void setRoles(List<Roles> roles) {
-		this.roles = roles;
-	}
+    public int getAccountEnabledStatus() {
+        return accountEnabledStatus;
+    }
 
+    public void setAccountEnabledStatus(int accountEnabledStatus) {
+        this.accountEnabledStatus = accountEnabledStatus;
+    }
 
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
+    }
 }
