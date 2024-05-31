@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.GreatLearning.RestApi.Entity.Employees;
 import com.GreatLearning.RestApi.Entity.User;
-import com.GreatLearning.RestApi.Entity.UserAlt;
 import com.GreatLearning.RestApi.Service.EmployeeService;
 import com.GreatLearning.RestApi.Service.UserService;
 
@@ -32,7 +31,7 @@ public class RestControl {
 	
 	@PostMapping("addUser")
 	@ApiOperation("Add a new user with roles")
-	public User addUser(@RequestBody UserAlt newUser)
+	public User addUser(@RequestBody User newUser)
 	{
 		return user.addUser(newUser);
 	}

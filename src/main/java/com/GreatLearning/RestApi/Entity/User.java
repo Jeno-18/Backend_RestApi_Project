@@ -15,7 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 
@@ -34,15 +34,19 @@ public class User {
     private String password;
     
     @Column(name = "ACCOUNTEXPIRYDATE", nullable = false)
+    @JsonIgnore
     private LocalDate accountExpiryDate;
     
     @Column(name = "ACCOUNTLOCKEDSTATUS", columnDefinition = "INT", nullable = false)
+    @JsonIgnore
     private int accountLockedStatus;
     
     @Column(name = "CREDENTIALSEXPIRYDATE", nullable = false)
+    @JsonIgnore
     private LocalDate credentialsExpiryDate;
     
     @Column(name = "ACCOUNTENABLEDSTATUS", columnDefinition = "INT", nullable = false)
+    @JsonIgnore
     private int accountEnabledStatus;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
