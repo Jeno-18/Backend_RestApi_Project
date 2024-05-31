@@ -24,7 +24,6 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
      
-	//2nd imp method will take a arg of type claimsResolver + this method is invoked by above 2 functions
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -38,13 +37,11 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-	//1st imp method will take a userDetails object and create a Jwt Token
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
     }
 
-	//Subject is the Principal i.e logged in user ("Alice")
     private String createToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
