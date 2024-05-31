@@ -1,5 +1,6 @@
 package com.GreatLearning.RestApi.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,25 +9,33 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.GreatLearning.RestApi.Filter.JwtRequestFilter;
 import com.GreatLearning.RestApi.Service.FullInfoUser;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	JwtRequestFilter jwtRequestFilter;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.antMatchers("/addUser", "/getAllEmployeesList", "/getEmployeeById/**", "/updateEployee", "/addUser")
-				.hasAnyAuthority("USER", "ADMIN").antMatchers("/deleteEmployeeById/**").hasAuthority("ADMIN")
+		http.csrf().disable().authorizeRequests()
 				.antMatchers("/authenticate").permitAll()
-				.anyRequest().authenticated().and().formLogin().loginProcessingUrl("/login").permitAll().and().logout()
-				.logoutSuccessUrl("/login").permitAll().and().exceptionHandling().accessDeniedPage("/403").and().cors()
-				.and().csrf().disable();
+				.antMatchers("/addUser", "/getAllEmployeesList", "/getEmployeeById/**", "/updateEployee/**",
+						"/findEmployeeByFirstName", "/employeeSortedListASC", "/employeeSortedListDESC", "/getUsers")
+				.hasAnyAuthority("USER", "ADMIN").antMatchers("/addEmployees", "/deleteEmployeeById/**")
+				.hasAuthority("ADMIN").anyRequest().authenticated().and().exceptionHandling().accessDeniedPage("/403")
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
@@ -57,4 +66,5 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	public UserDetailsService userDetailsService() {
 		return new FullInfoUser();
 	}
+
 }
