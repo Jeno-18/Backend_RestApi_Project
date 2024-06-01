@@ -1,6 +1,10 @@
 I have Used MySql for this as i was encountering an error with h2 database after adding spring security and wasn't able to resolve it.
-ADMIN has access to all endpoints
-USER does not have access to add and delete Employees
+
+ADMIN has access to all endpoints.
+
+USER does not have access to add and delete Employees endopoints.
+
+Jwt Authorization has been used for the purpose of Authorization.
 
 ![Screenshot (599)](https://github.com/Jeno-18/Backend_RestApi_Project/assets/144360077/26a92f3c-cb1b-4b79-8e10-e66ab8008d78)
 ![Screenshot (598)](https://github.com/Jeno-18/Backend_RestApi_Project/assets/144360077/735b43b5-72b1-42a6-aed6-4bb3871bacc8)
